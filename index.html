@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Chemistry Calculators</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.2.1"></script>
+
+<script src="navigation.js"></script>
+<script src="distribution.js"></script>
+<script src="solver.js"></script>
+
+<style>
+
+body{
+    font-family:Arial;
+    display:flex;
+    justify-content:center;
+}
+
+.main{
+    width:700px;
+    text-align:center;
+}
+
+.navbar{
+    margin-bottom:20px;
+}
+
+button{
+    margin:5px;
+}
+
+button.active{
+    background:#4CAF50;
+    color:white;
+}
+
+.page{
+    display:none;
+}
+
+/* solver styles */
+
+.container{
+    text-align:center;
+    border:1px solid #ccc;
+    padding:30px;
+    border-radius:10px;
+}
+
+input,select{
+    width:120px;
+    margin:5px;
+}
+
+pre{
+    text-align:left;
+    background:#f4f4f4;
+    padding:10px;
+}
+
+.note{
+    font-size:13px;
+    color:#555;
+    text-align:left;
+}
+
+#ka_container input{
+    width:100px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="main">
+
+<h2>Chemistry Calculators</h2>
+
+<div class="navbar">
+
+<button
+class="navbtn"
+id="btn_distribution"
+onclick="showPage('distribution')">
+
+Distribution Diagram
+
+</button>
+
+<button
+class="navbtn"
+id="btn_solver"
+onclick="showPage('solver')">
+
+Acid/Base Solver
+
+</button>
+
+</div>
+
+<!-- ======================= -->
+<!-- Distribution Calculator -->
+<!-- ======================= -->
+
+<div id="distribution" class="page">
+
+<h3>Acid Distribution Coefficient Calculator</h3>
+
+<p>Number of dissociation steps (n)</p>
+<input id="n">
+
+<br><br>
+
+<p>Input mode</p>
+
+<select id="mode">
+<option value="Ka">Ka</option>
+<option value="pKa">pKa</option>
+</select>
+
+<br><br>
+
+<div id="ka_container"></div>
+
+<br>
+
+<button onclick="generateInputs()">Generate Inputs</button>
+<button onclick="run()">Plot Distribution</button>
+
+<br><br>
+
+<canvas id="chart"></canvas>
+
+</div>
+
+<!-- =================== -->
+<!-- Acid/Base Solver   -->
+<!-- =================== -->
+
+<div id="solver" class="page">
+
+<div class="container">
+
+<h3>Acid / Base Calculator</h3>
+
+<p>
+Type:
+<select id="type">
+<option value="acid">Acid</option>
+<option value="base">Base</option>
+</select>
+</p>
+
+<p>Ionization steps:</p>
+<input id="solver_n" value="1">
+
+<p>Initial concentration (c0):</p>
+<input id="c0" value="0.1">
+
+<p>Kw:</p>
+<input id="kw" value="1e-14">
+
+<p>K<sub>a</sub> / K<sub>b</sub> values (comma separated):</p>
+<input id="ka_solver" value="1.8e-5">
+
+<br><br>
+
+<button onclick="runCalc()">Calculate</button>
+
+<br><br>
+
+<div class="note">
+<b>Result structure:</b><br>
+For acids: ion concentrations, HA, H⁺, OH⁻<br>
+For bases: ion concentrations, BOH, OH⁻, H⁺
+</div>
+
+<br>
+
+<pre id="output"></pre>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+showPage("distribution")
+
+</script>
+
+<script>
+
+/* ---------- solver helper functions ---------- */
+
+function superscript(num){
+
+const map={
+"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴",
+"5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"
+};
+
+return num.toString().split("").map(x=>map[x]).join("");
+
+}
+
+function subscript(num){
+
+const map={
+"0":"₀","1":"₁","2":"₂","3":"₃","4":"₄",
+"5":"₅","6":"₆","7":"₇","8":"₈","9":"₉"
+};
+
+return num.toString().split("").map(x=>map[x]).join("");
+
+}
+
+function runCalc(){
+
+let n=parseInt(document.getElementById("solver_n").value);
+
+let c0=parseFloat(document.getElementById("c0").value);
+
+let kw=parseFloat(document.getElementById("kw").value);
+
+let type=document.getElementById("type").value;
+
+let k=document.getElementById("ka_solver").value.split(",").map(Number);
+
+let sol=computeSolution(n,c0,kw,k);
+
+let names=[];
+
+if(type==="acid"){
+
+for(let i=1;i<=n;i++){
+
+let Hcount=n-i;
+
+let name="";
+
+if(Hcount>0){
+name+="H"+(Hcount>1?subscript(Hcount):"");
+}
+
+name+="A";
+
+if(i===1){
+name+="⁻";
+}else{
+name+=superscript(i)+"⁻";
+}
+
+names.push(name);
+
+}
+
+let neutral="H"+(n>1?subscript(n):"")+"A";
+
+names.push(neutral);
+names.push("H⁺");
+names.push("OH⁻");
+
+}else{
+
+for(let i=1;i<=n;i++){
+
+let OHcount=n-i;
+
+let name="B";
+
+if(OHcount>0){
+name+="(OH)"+(OHcount>1?subscript(OHcount):"");
+}
+
+if(i===1){
+name+="⁺";
+}else{
+name+=superscript(i)+"⁺";
+}
+
+names.push(name);
+
+}
+
+let neutral="B(OH)"+(n>1?subscript(n):"");
+
+names.push(neutral);
+names.push("OH⁻");
+names.push("H⁺");
+
+}
+
+let pH;
+
+if(type==="acid"){
+
+let H=sol[sol.length-2];
+
+pH=-Math.log10(H);
+
+}else{
+
+let OH=sol[sol.length-1];
+
+let pOH=-Math.log10(OH);
+
+pH=14-pOH;
+
+}
+
+let text="";
+
+text+=names[n]+" = "+sol[n].toExponential(4)+"\n";
+
+for(let i=0;i<n;i++){
+text+=names[i]+" = "+sol[i].toExponential(4)+"\n";
+}
+
+text+=names[n+1]+" = "+sol[n+1].toExponential(4)+"\n";
+text+=names[n+2]+" = "+sol[n+2].toExponential(4)+"\n";
+
+text+="\n";
+
+text+="pH = "+pH.toFixed(4);
+
+document.getElementById("output").innerText=text;
+
+}
+
+</script>
+
+</body>
+
+</html>
