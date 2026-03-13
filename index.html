@@ -302,7 +302,7 @@ names.push("H⁺");
 
 }
 
-let H, OH, pH;
+let H, OH;
 
 if(type === "acid"){
 
@@ -311,13 +311,12 @@ if(type === "acid"){
 
 }else{
 
-    // solver 中变量角色互换
     OH = sol[n+1];
     H = kw / OH;
 
 }
 
-pH = -Math.log10(H);
+let pH = -Math.log10(H);
     
 let text="";
 
@@ -344,6 +343,7 @@ document.getElementById("output").innerText=text;
 
 
 </html>
+
 
 
 
