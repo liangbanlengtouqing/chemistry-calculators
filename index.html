@@ -18,7 +18,7 @@
 <style>
 
 body{
-    font-family:Arial;
+    font-family:'Times New Roman', Times, serif;
     display:flex;
     justify-content:center;
 }
@@ -83,7 +83,7 @@ pre{
 
 <div class="main">
 
-<h2>Chemistry Calculators</h2>
+<h2>水溶液计算器<br>Chemistry Calculators</h2>
 
 <div class="navbar">
 
@@ -92,7 +92,7 @@ class="navbtn"
 id="btn_distribution"
 onclick="showPage('distribution')">
 
-Distribution Diagram
+分布系数图<br>Distribution Diagram
 
 </button>
 
@@ -101,7 +101,7 @@ class="navbtn"
 id="btn_solver"
 onclick="showPage('solver')">
 
-Acid/Base Solver
+酸碱粒子计算器<br>Acid/Base Solver
 
 </button>
 
@@ -113,14 +113,14 @@ Acid/Base Solver
 
 <div id="distribution" class="page">
 
-<h3>Acid Distribution Coefficient Calculator</h3>
+<h3>分布系数计算器 <br> Acid and Base Distribution Coefficient Calculator</h3>
 
-<p>Number of dissociation steps (n)</p>
+<p>物种会发生几级电离？<br>Number of dissociation steps (n)</p>
 <input id="n">
 
 <br><br>
 
-<p>Input mode</p>
+<p>数据输入类型：<br>Input mode</p>
 
 <select id="mode">
 <option value="Ka">Ka</option>
@@ -133,8 +133,8 @@ Acid/Base Solver
 
 <br>
 
-<button onclick="generateInputs()">Generate Inputs</button>
-<button onclick="run()">Plot Distribution</button>
+<button onclick="generateInputs()">生成输入框<br>Generate Inputs</button>
+<button onclick="run()">绘制图像<br>Plot Distribution</button>
 
 <br><br>
 
@@ -150,26 +150,26 @@ Acid/Base Solver
 
 <div class="container">
 
-<h3>Acid / Base Calculator</h3>
+<h3>酸碱粒子浓度计算器<br>Acid / Base Calculator</h3>
 
 <p>
-Type:
+物种是：Type:
 <select id="type">
-<option value="acid">Acid</option>
-<option value="base">Base</option>
+<option value="acid">酸<br>Acid</option>
+<option value="base">碱<br>Base</option>
 </select>
 </p>
 
-<p>Ionization steps:</p>
+<p>物种发生几级电离？<br>Number of dissociation steps (n)</p>
 <input id="solver_n" value="1">
 
-<p>Initial concentration (c0):</p>
+<p>物种初始摩尔浓度？<br>Initial concentration (c0):</p>
 <input id="c0" value="0.1">
 
-<p>Kw:</p>
+<p>水的离子积？<br>Kw:</p>
 <input id="kw" value="1e-14">
 
-<p>K<sub>a</sub> / K<sub>b</sub> values (comma separated):</p>
+<p>各级解离常数为？（用英文逗号分隔数据）<br>K<sub>a</sub> / K<sub>b</sub> values (comma separated):</p>
 <input id="ka_solver" value="1.8e-5">
 
 <br><br>
@@ -179,7 +179,7 @@ Type:
 <br><br>
 
 <div class="note">
-<b>Result structure:</b><br>
+<b>输出结构Result structure:</b><br>
 For acids: ion concentrations, HA, H⁺, OH⁻<br>
 For bases: ion concentrations, BOH, OH⁻, H⁺
 </div>
