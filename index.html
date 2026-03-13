@@ -311,13 +311,14 @@ if(type === "acid"){
 
 }else{
 
+    // solver 中变量角色互换
     OH = sol[n+1];
     H = kw / OH;
 
 }
 
-let pH = -Math.log10(H);
-    
+pH = -Math.log10(H);
+
 let text="";
 
 text+=names[n]+" = "+sol[n].toExponential(4)+"\n";
@@ -341,10 +342,4 @@ document.getElementById("output").innerText=text;
 
 </body>
 
-
 </html>
-
-
-
-
-
