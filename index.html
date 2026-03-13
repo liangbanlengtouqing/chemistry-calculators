@@ -302,24 +302,23 @@ names.push("H⁺");
 
 }
 
-let pH;
+let H, OH, pH;
 
-if(type==="acid"){
+if(type === "acid"){
 
-let H=sol[sol.length-2];
-
-pH=-Math.log10(H);
+    H = sol[n+1];
+    OH = sol[n+2];
 
 }else{
 
-let OH=sol[sol.length-1];
-
-let pOH=-Math.log10(OH);
-
-pH=14-pOH;
+    // solver 中变量角色互换
+    OH = sol[n+1];
+    H = kw / OH;
 
 }
 
+pH = -Math.log10(H);
+    
 let text="";
 
 text+=names[n]+" = "+sol[n].toExponential(4)+"\n";
@@ -345,5 +344,6 @@ document.getElementById("output").innerText=text;
 
 
 </html>
+
 
 
